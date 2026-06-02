@@ -1,0 +1,13 @@
+packages:
+  - .
+minimumReleaseAge: 1440
+minimumReleaseAgeStrict: false
+strictDepBuilds: true
+allowBuilds:
+  '@apollo/protobufjs': true
+  '@nestjs/core': true
+  bcrypt: true
+  unrs-resolver: true
+peerDependencyRules:
+  allowedVersions:
+    '@apollo/server-plugin-landing-page-graphql-playground>@apollo/server': '^5.0.0'
