@@ -35,6 +35,8 @@ type AuthResponse {
 
 type Query {
   me: User!
+  getAll: [User!]!
+  user(id: ID!): User!
 }
 
 type Mutation {
@@ -42,6 +44,9 @@ type Mutation {
   login(loginInput: LoginInput!): AuthResponse!
   refresh(refreshTokenInput: RefreshTokenInput!): AuthResponse!
   logout: Boolean!
+  createUser(createUserInput: CreateUserInput!): User!
+  updateUser(updateUserInput: UpdateUserInput!): User!
+  deleteUser(id: ID!): User!
 }
 
 input SignUpInput {
@@ -57,4 +62,21 @@ input LoginInput {
 
 input RefreshTokenInput {
   refreshToken: String!
+}
+
+input CreateUserInput {
+  fullName: String!
+  email: String!
+  password: String!
+  roles: [UserRole!]
+  isActive: Boolean
+}
+
+input UpdateUserInput {
+  fullName: String
+  email: String
+  password: String
+  roles: [UserRole!]
+  isActive: Boolean
+  id: ID!
 }

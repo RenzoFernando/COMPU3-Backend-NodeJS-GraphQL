@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import { User, UserSchema } from './entities/user.entity';
+import { UsersResolver } from './users.resolver';
 import { UsersService } from './users.service';
 
 @Module({
@@ -9,7 +10,7 @@ import { UsersService } from './users.service';
     ConfigModule,
     MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
   ],
-  providers: [UsersService],
+  providers: [UsersResolver, UsersService],
   exports: [UsersService],
 })
 export class UsersModule {}
