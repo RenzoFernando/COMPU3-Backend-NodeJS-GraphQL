@@ -1,26 +1,26 @@
-FROM node:22-bookworm-slim AS builder
+FROM oven/bun:1.2.23-debian AS builder
 
 WORKDIR /app
 
-COPY package*.json ./
-RUN npm install --no-audit --no-fund
+COPY package.json bun.lock ./
+RUN bun install --frozen-lockfile
 
 COPY tsconfig*.json ./
 COPY nest-cli.json ./
 COPY src ./src
 
-RUN npm run build
+RUN bun run build
 
-FROM node:22-bookworm-slim AS runner
+FROM oven/bun:1.2.23-debian AS runner
 
 WORKDIR /app
 ENV NODE_ENV=production
 
-COPY package*.json ./
-RUN npm install --omit=dev --no-audit --no-fund
+COPY package.json bun.lock ./
+RUN bun install --frozen-lockfile --production
 
 COPY --from=builder /app/dist ./dist
 
 EXPOSE 10000
 
-CMD ["node", "dist/main.js"]
+CMD ["bun", "dist/main.js"]
