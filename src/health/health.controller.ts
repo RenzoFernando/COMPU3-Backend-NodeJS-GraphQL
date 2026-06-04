@@ -6,6 +6,7 @@ export class HealthController {
   getHealth() {
     return {
       ok: true,
+      status: 'ok',
       message: 'COMPU3 GraphQL API running',
     };
   }

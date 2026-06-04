@@ -4,7 +4,7 @@ Backend NestJS con GraphQL, JWT, roles de usuario y MongoDB.
 
 ## Requisitos
 
-- Node.js 24 o compatible
+- Node.js 22
 - npm
 - MongoDB local o MongoDB Atlas
 
@@ -16,7 +16,7 @@ Copia `.env.example` a `.env` para desarrollo local.
 NODE_ENV=development
 APP_PORT=9000
 PORT=9000
-MONGO_URI=mongodb+srv://renzofernandomd_db_user:renzofernandomd_db_password@graphql.oor9bkf.mongodb.net/compu3_graphql?retryWrites=true&w=majority
+MONGO_URI=mongodb+srv://<USER>:<PASSWORD>@<CLUSTER>/<DATABASE>?retryWrites=true&w=majority
 JWT_SECRET=change_me_access_secret
 JWT_REFRESH_SECRET=change_me_refresh_secret
 JWT_EXPIRES_IN=1h
@@ -64,25 +64,20 @@ MONGO_URI=mongodb://127.0.0.1:27017/compu3_graphql
 Para Render no se debe depender del `docker-compose.yml`, porque ese archivo sólo levanta MongoDB local. En Render el backend debe conectarse a MongoDB Atlas mediante `MONGO_URI`.
 
 1. Sube el repositorio a GitHub.
-2. En Render, crea un Blueprint desde el repositorio si vas a usar `render.yaml`, o crea un Web Service manual con runtime Docker.
-3. Configura estas variables de entorno en Render:
+2. En Render, crea un Blueprint desde el repositorio usando `render.yaml`.
+3. Configura estas variables de entorno secretas en Render:
 
 ```env
-NODE_ENV=production
-PORT=10000
-APP_PORT=10000
-MONGO_URI=mongodb+srv://renzofernandomd_db_user:renzofernandomd_db_password@graphql.oor9bkf.mongodb.net/compu3_graphql?retryWrites=true&w=majority
+MONGO_URI=mongodb+srv://<USER>:<PASSWORD>@<CLUSTER>/compu3_graphql?retryWrites=true&w=majority
 JWT_SECRET=change_me_access_secret
 JWT_REFRESH_SECRET=change_me_refresh_secret
-JWT_EXPIRES_IN=1h
-JWT_REFRESH_EXPIRES_IN=7d
 SUPERADMIN_NAME=Ragnok Ironclaw
 SUPERADMIN_EMAIL=superadmin@gringotts.hp
 SUPERADMIN_PASSWORD=ChangeMe2026*
 ```
 
 4. En MongoDB Atlas, permite conexiones desde Render. Para pruebas puedes permitir `0.0.0.0/0` en Network Access.
-5. Ejecuta el deploy.
+5. Ejecuta el deploy o un Manual Sync en el Blueprint.
 6. Revisa el health check en:
 
 ```txt
@@ -93,6 +88,54 @@ https://TU-SERVICIO.onrender.com/api/health
 
 ```txt
 https://TU-SERVICIO.onrender.com/api/graphql
+```
+
+## Postman
+
+GraphQL se prueba con `POST`, no con `GET`.
+
+URL:
+
+```txt
+https://TU-SERVICIO.onrender.com/api/graphql
+```
+
+Headers:
+
+```txt
+Content-Type: application/json
+Accept: application/json
+Apollo-Require-Preflight: true
+```
+
+Body:
+
+```json
+{
+  "query": "query { __typename }"
+}
+```
+
+Health GraphQL:
+
+```json
+{
+  "query": "query { health { status message timestamp } }"
+}
+```
+
+Login:
+
+```json
+{
+  "query": "mutation { login(loginInput: { email: \"superadmin@gringotts.hp\", password: \"ChangeMe2026*\" }) { token refreshToken user { id email fullName roles } } }"
+}
+```
+
+Para operaciones protegidas, agrega el header:
+
+```txt
+Authorization: Bearer TOKEN
 ```
 
 ## Funcionalidades implementadas
@@ -227,14 +270,6 @@ mutation {
     isActive
   }
 }
-```
-
-## Autenticación en Postman
-
-Para operaciones protegidas, agrega el header:
-
-```txt
-Authorization: Bearer TOKEN
 ```
 
 ## Dificultades o pendientes

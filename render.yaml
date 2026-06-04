@@ -3,8 +3,10 @@ services:
     name: compu3-backend-nodejs-graphql
     runtime: docker
     plan: free
+    region: oregon
     dockerfilePath: ./Dockerfile
     dockerContext: .
+    healthCheckPath: /api/health
     envVars:
       - key: NODE_ENV
         value: production
