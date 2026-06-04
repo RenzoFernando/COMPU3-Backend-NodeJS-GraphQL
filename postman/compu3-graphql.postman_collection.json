@@ -1,0 +1,1224 @@
+{
+  "info": {
+    "_postman_id": "2ea9f4a0-3a1b-442f-af96-70e9c9a6c506",
+    "name": "COMPU3 GraphQL Collection",
+    "description": ".",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "runId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "regularEmail",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "regularPassword",
+      "value": "User123456*",
+      "type": "string"
+    },
+    {
+      "key": "regularToken",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "regularRefreshToken",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "regularUserId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "superadminToken",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "managedEmail",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "managedPassword",
+      "value": "Managed123456*",
+      "type": "string"
+    },
+    {
+      "key": "managedUserId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "vaultId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "transactionId",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "00 Setup run variables",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "const res = pm.response.json();",
+              "const runId = Date.now().toString();",
+              "pm.collectionVariables.set('runId', runId);",
+              "pm.collectionVariables.set('regularEmail', `postman.regular.${runId}@test.com`);",
+              "pm.collectionVariables.set('managedEmail', `postman.managed.${runId}@test.com`);",
+              "pm.collectionVariables.set('regularPassword', 'User123456*');",
+              "pm.collectionVariables.set('managedPassword', 'Managed123456*');",
+              "pm.test('Setup listo', () => pm.expect(res.data.health.status).to.eql('ok'));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Accept",
+            "value": "application/json"
+          },
+          {
+            "key": "Apollo-Require-Preflight",
+            "value": "true"
+          },
+          {
+            "key": "X-Apollo-Operation-Name",
+            "value": "SetupRunVariables"
+          }
+        ],
+        "body": {
+          "mode": "graphql",
+          "graphql": {
+            "query": "query { health { status } }",
+            "variables": "{}"
+          }
+        },
+        "url": {
+          "raw": "https://compu3-backend-nodejs-graphql.onrender.com/api/graphql",
+          "protocol": "https",
+          "host": [
+            "compu3-backend-nodejs-graphql",
+            "onrender",
+            "com"
+          ],
+          "path": [
+            "api",
+            "graphql"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "01 Health GraphQL",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "const res = pm.response.json();",
+              "pm.test('Health ok', () => pm.expect(res.data.health.status).to.eql('ok'));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Accept",
+            "value": "application/json"
+          },
+          {
+            "key": "Apollo-Require-Preflight",
+            "value": "true"
+          },
+          {
+            "key": "X-Apollo-Operation-Name",
+            "value": "HealthGraphQL"
+          }
+        ],
+        "body": {
+          "mode": "graphql",
+          "graphql": {
+            "query": "query { health { status message timestamp } }",
+            "variables": "{}"
+          }
+        },
+        "url": {
+          "raw": "https://compu3-backend-nodejs-graphql.onrender.com/api/graphql",
+          "protocol": "https",
+          "host": [
+            "compu3-backend-nodejs-graphql",
+            "onrender",
+            "com"
+          ],
+          "path": [
+            "api",
+            "graphql"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "02 Signup regular user",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "const res = pm.response.json();",
+              "pm.test('Signup exitoso', () => pm.expect(res.data.signup.token).to.be.a('string'));",
+              "pm.collectionVariables.set('regularToken', res.data.signup.token);",
+              "pm.collectionVariables.set('regularRefreshToken', res.data.signup.refreshToken);",
+              "pm.collectionVariables.set('regularUserId', res.data.signup.user.id);"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Accept",
+            "value": "application/json"
+          },
+          {
+            "key": "Apollo-Require-Preflight",
+            "value": "true"
+          },
+          {
+            "key": "X-Apollo-Operation-Name",
+            "value": "SignupRegularUser"
+          }
+        ],
+        "body": {
+          "mode": "graphql",
+          "graphql": {
+            "query": "mutation Signup($signupInput: SignUpInput!) {\n  signup(signupInput: $signupInput) {\n    token\n    refreshToken\n    user { id email fullName roles isActive }\n  }\n}",
+            "variables": "{\n  \"signupInput\": {\n    \"email\": \"{{regularEmail}}\",\n    \"password\": \"{{regularPassword}}\",\n    \"fullName\": \"Postman Regular User\"\n  }\n}"
+          }
+        },
+        "url": {
+          "raw": "https://compu3-backend-nodejs-graphql.onrender.com/api/graphql",
+          "protocol": "https",
+          "host": [
+            "compu3-backend-nodejs-graphql",
+            "onrender",
+            "com"
+          ],
+          "path": [
+            "api",
+            "graphql"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "03 Login superadmin",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "const res = pm.response.json();",
+              "pm.test('Login superadmin exitoso', () => pm.expect(res.data.login.user.roles).to.include('SUPERADMIN'));",
+              "pm.collectionVariables.set('superadminToken', res.data.login.token);"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Accept",
+            "value": "application/json"
+          },
+          {
+            "key": "Apollo-Require-Preflight",
+            "value": "true"
+          },
+          {
+            "key": "X-Apollo-Operation-Name",
+            "value": "LoginSuperadmin"
+          }
+        ],
+        "body": {
+          "mode": "graphql",
+          "graphql": {
+            "query": "mutation Login($loginInput: LoginInput!) {\n  login(loginInput: $loginInput) {\n    token\n    user { id email roles }\n  }\n}",
+            "variables": "{\n  \"loginInput\": {\n    \"email\": \"superadmin@gringotts.hp\",\n    \"password\": \"ChangeMe2026*\"\n  }\n}"
+          }
+        },
+        "url": {
+          "raw": "https://compu3-backend-nodejs-graphql.onrender.com/api/graphql",
+          "protocol": "https",
+          "host": [
+            "compu3-backend-nodejs-graphql",
+            "onrender",
+            "com"
+          ],
+          "path": [
+            "api",
+            "graphql"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "04 Me regular user",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "const res = pm.response.json();",
+              "pm.test('Me corresponde al usuario regular', () => pm.expect(res.data.me.email).to.eql(pm.collectionVariables.get('regularEmail')));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Accept",
+            "value": "application/json"
+          },
+          {
+            "key": "Apollo-Require-Preflight",
+            "value": "true"
+          },
+          {
+            "key": "X-Apollo-Operation-Name",
+            "value": "MeRegularUser"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer {{regularToken}}"
+          }
+        ],
+        "body": {
+          "mode": "graphql",
+          "graphql": {
+            "query": "query { me { id email fullName roles isActive } }",
+            "variables": "{}"
+          }
+        },
+        "url": {
+          "raw": "https://compu3-backend-nodejs-graphql.onrender.com/api/graphql",
+          "protocol": "https",
+          "host": [
+            "compu3-backend-nodejs-graphql",
+            "onrender",
+            "com"
+          ],
+          "path": [
+            "api",
+            "graphql"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "05 Get all users as regular",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "const res = pm.response.json();",
+              "pm.test('Usuario autenticado puede listar usuarios', () => pm.expect(res.data.getAll).to.be.an('array'));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Accept",
+            "value": "application/json"
+          },
+          {
+            "key": "Apollo-Require-Preflight",
+            "value": "true"
+          },
+          {
+            "key": "X-Apollo-Operation-Name",
+            "value": "GetAllUsersAsRegular"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer {{regularToken}}"
+          }
+        ],
+        "body": {
+          "mode": "graphql",
+          "graphql": {
+            "query": "query { getAll { id email roles isActive } }",
+            "variables": "{}"
+          }
+        },
+        "url": {
+          "raw": "https://compu3-backend-nodejs-graphql.onrender.com/api/graphql",
+          "protocol": "https",
+          "host": [
+            "compu3-backend-nodejs-graphql",
+            "onrender",
+            "com"
+          ],
+          "path": [
+            "api",
+            "graphql"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "06 Regular cannot create user",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "const res = pm.response.json();",
+              "pm.test('Permiso denegado al usuario regular', () => pm.expect(res.errors).to.be.an('array'));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Accept",
+            "value": "application/json"
+          },
+          {
+            "key": "Apollo-Require-Preflight",
+            "value": "true"
+          },
+          {
+            "key": "X-Apollo-Operation-Name",
+            "value": "RegularCannotCreateUser"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer {{regularToken}}"
+          }
+        ],
+        "body": {
+          "mode": "graphql",
+          "graphql": {
+            "query": "mutation CreateUser($createUserInput: CreateUserInput!) {\n  createUser(createUserInput: $createUserInput) { id email roles }\n}",
+            "variables": "{\n  \"createUserInput\": {\n    \"email\": \"blocked.{{runId}}@test.com\",\n    \"password\": \"Blocked123456*\",\n    \"fullName\": \"Blocked User\",\n    \"roles\": [\"USER\"],\n    \"isActive\": true\n  }\n}"
+          }
+        },
+        "url": {
+          "raw": "https://compu3-backend-nodejs-graphql.onrender.com/api/graphql",
+          "protocol": "https",
+          "host": [
+            "compu3-backend-nodejs-graphql",
+            "onrender",
+            "com"
+          ],
+          "path": [
+            "api",
+            "graphql"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "07 Superadmin creates user",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "const res = pm.response.json();",
+              "pm.test('Superadmin crea usuario', () => pm.expect(res.data.createUser.email).to.eql(pm.collectionVariables.get('managedEmail')));",
+              "pm.collectionVariables.set('managedUserId', res.data.createUser.id);"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Accept",
+            "value": "application/json"
+          },
+          {
+            "key": "Apollo-Require-Preflight",
+            "value": "true"
+          },
+          {
+            "key": "X-Apollo-Operation-Name",
+            "value": "SuperadminCreatesUser"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer {{superadminToken}}"
+          }
+        ],
+        "body": {
+          "mode": "graphql",
+          "graphql": {
+            "query": "mutation CreateUser($createUserInput: CreateUserInput!) {\n  createUser(createUserInput: $createUserInput) {\n    id\n    email\n    fullName\n    roles\n    isActive\n  }\n}",
+            "variables": "{\n  \"createUserInput\": {\n    \"email\": \"{{managedEmail}}\",\n    \"password\": \"{{managedPassword}}\",\n    \"fullName\": \"Postman Managed User\",\n    \"roles\": [\"USER\"],\n    \"isActive\": true\n  }\n}"
+          }
+        },
+        "url": {
+          "raw": "https://compu3-backend-nodejs-graphql.onrender.com/api/graphql",
+          "protocol": "https",
+          "host": [
+            "compu3-backend-nodejs-graphql",
+            "onrender",
+            "com"
+          ],
+          "path": [
+            "api",
+            "graphql"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "08 Superadmin updates user",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "const res = pm.response.json();",
+              "pm.test('Usuario actualizado', () => pm.expect(res.data.updateUser.fullName).to.eql('Postman Managed User Updated'));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Accept",
+            "value": "application/json"
+          },
+          {
+            "key": "Apollo-Require-Preflight",
+            "value": "true"
+          },
+          {
+            "key": "X-Apollo-Operation-Name",
+            "value": "SuperadminUpdatesUser"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer {{superadminToken}}"
+          }
+        ],
+        "body": {
+          "mode": "graphql",
+          "graphql": {
+            "query": "mutation UpdateUser($updateUserInput: UpdateUserInput!) {\n  updateUser(updateUserInput: $updateUserInput) {\n    id\n    fullName\n    isActive\n  }\n}",
+            "variables": "{\n  \"updateUserInput\": {\n    \"id\": \"{{managedUserId}}\",\n    \"fullName\": \"Postman Managed User Updated\",\n    \"isActive\": true\n  }\n}"
+          }
+        },
+        "url": {
+          "raw": "https://compu3-backend-nodejs-graphql.onrender.com/api/graphql",
+          "protocol": "https",
+          "host": [
+            "compu3-backend-nodejs-graphql",
+            "onrender",
+            "com"
+          ],
+          "path": [
+            "api",
+            "graphql"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "09 Regular creates vault",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "const res = pm.response.json();",
+              "pm.test('Bóveda creada', () => pm.expect(res.data.createVault.name).to.include('Postman Vault'));",
+              "pm.collectionVariables.set('vaultId', res.data.createVault.id);"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Accept",
+            "value": "application/json"
+          },
+          {
+            "key": "Apollo-Require-Preflight",
+            "value": "true"
+          },
+          {
+            "key": "X-Apollo-Operation-Name",
+            "value": "RegularCreatesVault"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer {{regularToken}}"
+          }
+        ],
+        "body": {
+          "mode": "graphql",
+          "graphql": {
+            "query": "mutation CreateVault($createVaultInput: CreateVaultInput!) {\n  createVault(createVaultInput: $createVaultInput) {\n    id\n    name\n    type\n    baseCurrency\n    ownerUserId\n    deletedAt\n  }\n}",
+            "variables": "{\n  \"createVaultInput\": {\n    \"name\": \"Postman Vault {{runId}}\",\n    \"description\": \"Vault temporal para pruebas Postman\",\n    \"type\": \"PERSONAL\",\n    \"baseCurrency\": \"GALLEON\"\n  }\n}"
+          }
+        },
+        "url": {
+          "raw": "https://compu3-backend-nodejs-graphql.onrender.com/api/graphql",
+          "protocol": "https",
+          "host": [
+            "compu3-backend-nodejs-graphql",
+            "onrender",
+            "com"
+          ],
+          "path": [
+            "api",
+            "graphql"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "10 Regular lists own vaults",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "const res = pm.response.json();",
+              "pm.test('Lista incluye la bóveda creada', () => pm.expect(res.data.vaults.map(v => v.id)).to.include(pm.collectionVariables.get('vaultId')));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Accept",
+            "value": "application/json"
+          },
+          {
+            "key": "Apollo-Require-Preflight",
+            "value": "true"
+          },
+          {
+            "key": "X-Apollo-Operation-Name",
+            "value": "RegularListsOwnVaults"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer {{regularToken}}"
+          }
+        ],
+        "body": {
+          "mode": "graphql",
+          "graphql": {
+            "query": "query { vaults { id name type baseCurrency deletedAt } }",
+            "variables": "{}"
+          }
+        },
+        "url": {
+          "raw": "https://compu3-backend-nodejs-graphql.onrender.com/api/graphql",
+          "protocol": "https",
+          "host": [
+            "compu3-backend-nodejs-graphql",
+            "onrender",
+            "com"
+          ],
+          "path": [
+            "api",
+            "graphql"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "11 Regular updates own vault",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "const res = pm.response.json();",
+              "pm.test('Bóveda actualizada', () => pm.expect(res.data.updateVault.name).to.include('Updated'));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Accept",
+            "value": "application/json"
+          },
+          {
+            "key": "Apollo-Require-Preflight",
+            "value": "true"
+          },
+          {
+            "key": "X-Apollo-Operation-Name",
+            "value": "RegularUpdatesOwnVault"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer {{regularToken}}"
+          }
+        ],
+        "body": {
+          "mode": "graphql",
+          "graphql": {
+            "query": "mutation UpdateVault($updateVaultInput: UpdateVaultInput!) {\n  updateVault(updateVaultInput: $updateVaultInput) {\n    id\n    name\n    description\n  }\n}",
+            "variables": "{\n  \"updateVaultInput\": {\n    \"id\": \"{{vaultId}}\",\n    \"name\": \"Postman Vault Updated {{runId}}\",\n    \"description\": \"Vault temporal actualizado\"\n  }\n}"
+          }
+        },
+        "url": {
+          "raw": "https://compu3-backend-nodejs-graphql.onrender.com/api/graphql",
+          "protocol": "https",
+          "host": [
+            "compu3-backend-nodejs-graphql",
+            "onrender",
+            "com"
+          ],
+          "path": [
+            "api",
+            "graphql"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "12 Regular creates transaction",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "const res = pm.response.json();",
+              "pm.test('Transacción creada', () => pm.expect(res.data.createTransaction.amountMinor).to.eql(1500));",
+              "pm.collectionVariables.set('transactionId', res.data.createTransaction.id);"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Accept",
+            "value": "application/json"
+          },
+          {
+            "key": "Apollo-Require-Preflight",
+            "value": "true"
+          },
+          {
+            "key": "X-Apollo-Operation-Name",
+            "value": "RegularCreatesTransaction"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer {{regularToken}}"
+          }
+        ],
+        "body": {
+          "mode": "graphql",
+          "graphql": {
+            "query": "mutation CreateTransaction($createTransactionInput: CreateTransactionInput!) {\n  createTransaction(createTransactionInput: $createTransactionInput) {\n    id\n    vaultId\n    type\n    amountMinor\n    currency\n    note\n    deletedAt\n  }\n}",
+            "variables": "{\n  \"createTransactionInput\": {\n    \"vaultId\": \"{{vaultId}}\",\n    \"type\": \"INCOME\",\n    \"amountMinor\": 1500,\n    \"currency\": \"GALLEON\",\n    \"note\": \"Postman transaction {{runId}}\"\n  }\n}"
+          }
+        },
+        "url": {
+          "raw": "https://compu3-backend-nodejs-graphql.onrender.com/api/graphql",
+          "protocol": "https",
+          "host": [
+            "compu3-backend-nodejs-graphql",
+            "onrender",
+            "com"
+          ],
+          "path": [
+            "api",
+            "graphql"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "13 Regular lists transactions",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "const res = pm.response.json();",
+              "pm.test('Lista incluye transacción creada', () => pm.expect(res.data.transactions.map(t => t.id)).to.include(pm.collectionVariables.get('transactionId')));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Accept",
+            "value": "application/json"
+          },
+          {
+            "key": "Apollo-Require-Preflight",
+            "value": "true"
+          },
+          {
+            "key": "X-Apollo-Operation-Name",
+            "value": "RegularListsTransactions"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer {{regularToken}}"
+          }
+        ],
+        "body": {
+          "mode": "graphql",
+          "graphql": {
+            "query": "query Transactions($vaultId: ID!) {\n  transactions(vaultId: $vaultId) {\n    id\n    vaultId\n    amountMinor\n    currency\n    type\n    note\n  }\n}",
+            "variables": "{\n  \"vaultId\": \"{{vaultId}}\"\n}"
+          }
+        },
+        "url": {
+          "raw": "https://compu3-backend-nodejs-graphql.onrender.com/api/graphql",
+          "protocol": "https",
+          "host": [
+            "compu3-backend-nodejs-graphql",
+            "onrender",
+            "com"
+          ],
+          "path": [
+            "api",
+            "graphql"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "14 Regular updates transaction",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "const res = pm.response.json();",
+              "pm.test('Transacción actualizada', () => pm.expect(res.data.updateTransaction.amountMinor).to.eql(2500));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Accept",
+            "value": "application/json"
+          },
+          {
+            "key": "Apollo-Require-Preflight",
+            "value": "true"
+          },
+          {
+            "key": "X-Apollo-Operation-Name",
+            "value": "RegularUpdatesTransaction"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer {{regularToken}}"
+          }
+        ],
+        "body": {
+          "mode": "graphql",
+          "graphql": {
+            "query": "mutation UpdateTransaction($updateTransactionInput: UpdateTransactionInput!) {\n  updateTransaction(updateTransactionInput: $updateTransactionInput) {\n    id\n    amountMinor\n    note\n  }\n}",
+            "variables": "{\n  \"updateTransactionInput\": {\n    \"id\": \"{{transactionId}}\",\n    \"amountMinor\": 2500,\n    \"note\": \"Postman transaction updated {{runId}}\"\n  }\n}"
+          }
+        },
+        "url": {
+          "raw": "https://compu3-backend-nodejs-graphql.onrender.com/api/graphql",
+          "protocol": "https",
+          "host": [
+            "compu3-backend-nodejs-graphql",
+            "onrender",
+            "com"
+          ],
+          "path": [
+            "api",
+            "graphql"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "15 Cleanup transaction",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "const res = pm.response.json();",
+              "pm.test('Transacción eliminada lógicamente', () => pm.expect(res.data.deleteTransaction.deletedAt).to.be.a('string'));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Accept",
+            "value": "application/json"
+          },
+          {
+            "key": "Apollo-Require-Preflight",
+            "value": "true"
+          },
+          {
+            "key": "X-Apollo-Operation-Name",
+            "value": "CleanupTransaction"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer {{regularToken}}"
+          }
+        ],
+        "body": {
+          "mode": "graphql",
+          "graphql": {
+            "query": "mutation DeleteTransaction($id: ID!) {\n  deleteTransaction(id: $id) {\n    id\n    deletedAt\n  }\n}",
+            "variables": "{\n  \"id\": \"{{transactionId}}\"\n}"
+          }
+        },
+        "url": {
+          "raw": "https://compu3-backend-nodejs-graphql.onrender.com/api/graphql",
+          "protocol": "https",
+          "host": [
+            "compu3-backend-nodejs-graphql",
+            "onrender",
+            "com"
+          ],
+          "path": [
+            "api",
+            "graphql"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "16 Cleanup vault",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "const res = pm.response.json();",
+              "pm.test('Bóveda eliminada lógicamente', () => pm.expect(res.data.deleteVault.deletedAt).to.be.a('string'));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Accept",
+            "value": "application/json"
+          },
+          {
+            "key": "Apollo-Require-Preflight",
+            "value": "true"
+          },
+          {
+            "key": "X-Apollo-Operation-Name",
+            "value": "CleanupVault"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer {{regularToken}}"
+          }
+        ],
+        "body": {
+          "mode": "graphql",
+          "graphql": {
+            "query": "mutation DeleteVault($id: ID!) {\n  deleteVault(id: $id) {\n    id\n    deletedAt\n  }\n}",
+            "variables": "{\n  \"id\": \"{{vaultId}}\"\n}"
+          }
+        },
+        "url": {
+          "raw": "https://compu3-backend-nodejs-graphql.onrender.com/api/graphql",
+          "protocol": "https",
+          "host": [
+            "compu3-backend-nodejs-graphql",
+            "onrender",
+            "com"
+          ],
+          "path": [
+            "api",
+            "graphql"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "17 Cleanup created users",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "const res = pm.response.json();",
+              "pm.test('Usuarios de prueba desactivados', () => { pm.expect(res.data.regular.isActive).to.eql(false); pm.expect(res.data.managed.isActive).to.eql(false); });"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Accept",
+            "value": "application/json"
+          },
+          {
+            "key": "Apollo-Require-Preflight",
+            "value": "true"
+          },
+          {
+            "key": "X-Apollo-Operation-Name",
+            "value": "CleanupCreatedUsers"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer {{superadminToken}}"
+          }
+        ],
+        "body": {
+          "mode": "graphql",
+          "graphql": {
+            "query": "mutation DeleteUser($regularId: ID!, $managedId: ID!) {\n  regular: deleteUser(id: $regularId) {\n    id\n    isActive\n  }\n  managed: deleteUser(id: $managedId) {\n    id\n    isActive\n  }\n}",
+            "variables": "{\n  \"regularId\": \"{{regularUserId}}\",\n  \"managedId\": \"{{managedUserId}}\"\n}"
+          }
+        },
+        "url": {
+          "raw": "https://compu3-backend-nodejs-graphql.onrender.com/api/graphql",
+          "protocol": "https",
+          "host": [
+            "compu3-backend-nodejs-graphql",
+            "onrender",
+            "com"
+          ],
+          "path": [
+            "api",
+            "graphql"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "18 Final health check",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "const res = pm.response.json();",
+              "pm.test('Health final ok', () => pm.expect(res.data.health.status).to.eql('ok'));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Accept",
+            "value": "application/json"
+          },
+          {
+            "key": "Apollo-Require-Preflight",
+            "value": "true"
+          },
+          {
+            "key": "X-Apollo-Operation-Name",
+            "value": "FinalHealthCheck"
+          }
+        ],
+        "body": {
+          "mode": "graphql",
+          "graphql": {
+            "query": "query { health { status } }",
+            "variables": "{}"
+          }
+        },
+        "url": {
+          "raw": "https://compu3-backend-nodejs-graphql.onrender.com/api/graphql",
+          "protocol": "https",
+          "host": [
+            "compu3-backend-nodejs-graphql",
+            "onrender",
+            "com"
+          ],
+          "path": [
+            "api",
+            "graphql"
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}
