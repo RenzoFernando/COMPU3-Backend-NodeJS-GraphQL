@@ -6,7 +6,6 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { Request } from 'express';
 import { join } from 'node:path';
 import { AuthModule } from './auth/auth.module';
-import { CategoriesModule } from './categories/categories.module';
 import { HealthModule } from './health/health.module';
 import { TransactionsModule } from './transactions/transactions.module';
 import { UsersModule } from './users/users.module';
@@ -25,7 +24,6 @@ import { VaultsModule } from './vaults/vaults.module';
     AuthModule,
     UsersModule,
     VaultsModule,
-    CategoriesModule,
     TransactionsModule,
   ],
 })
