@@ -4,7 +4,6 @@ import { ConfigModule } from '@nestjs/config';
 import { GraphQLModule } from '@nestjs/graphql';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Request } from 'express';
-import { join } from 'node:path';
 import { AuthModule } from './auth/auth.module';
 import { HealthModule } from './health/health.module';
 import { TransactionsModule } from './transactions/transactions.module';
@@ -16,10 +15,10 @@ import { VaultsModule } from './vaults/vaults.module';
     ConfigModule.forRoot(),
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
-      autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
+      autoSchemaFile: true,
       context: ({ req }: { req: Request }) => ({ req }),
     }),
-    MongooseModule.forRoot(process.env.MONGO_URI ?? 'mongodb://localhost:27017/compu3_graphql'),
+    MongooseModule.forRoot(process.env.MONGO_URI ?? 'mongodb://127.0.0.1:27017/compu3_graphql'),
     HealthModule,
     AuthModule,
     UsersModule,

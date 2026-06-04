@@ -2,29 +2,25 @@ FROM node:24-alpine AS builder
 
 WORKDIR /app
 
-RUN corepack enable
-
-COPY package.json pnpm-workspace.yaml ./
-RUN pnpm install --frozen-lockfile=false
+COPY package*.json ./
+RUN npm install
 
 COPY tsconfig*.json ./
 COPY nest-cli.json ./
 COPY src ./src
 
-RUN pnpm run build
+RUN npm run build
 
 FROM node:24-alpine AS runner
 
 WORKDIR /app
 ENV NODE_ENV=production
 
-RUN corepack enable
-
-COPY package.json pnpm-workspace.yaml ./
-RUN pnpm install --prod --frozen-lockfile=false
+COPY package*.json ./
+RUN npm install --omit=dev
 
 COPY --from=builder /app/dist ./dist
 
-EXPOSE 9000
+EXPOSE 10000
 
 CMD ["node", "dist/main.js"]
