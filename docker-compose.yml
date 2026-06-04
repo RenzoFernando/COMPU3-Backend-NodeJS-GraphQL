@@ -1,0 +1,14 @@
+services:
+  mongo:
+    image: mongo:7
+    container_name: compu3-graphql-mongo
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_DATABASE: compu3_graphql
+    volumes:
+      - mongo_data:/data/db
+
+volumes:
+  mongo_data:

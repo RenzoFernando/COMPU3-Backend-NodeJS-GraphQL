@@ -2,17 +2,59 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type User {
+  id: ID!
+  fullName: String!
+  email: String!
+  roles: [UserRole!]!
+  isActive: Boolean!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+enum UserRole {
+  SUPERADMIN
+  USER
+}
+
 """
 A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
 """
 scalar DateTime
 
-type HealthStatus {
-  message: String!
-  status: String!
-  timestamp: DateTime!
+type AuthResponse {
+  user: User!
+
+  """
+  Alias compatible con las pruebas de clase; contiene el access token JWT.
+  """
+  token: String!
+  accessToken: String!
+  refreshToken: String!
 }
 
 type Query {
-  health: HealthStatus!
+  me: User!
+}
+
+type Mutation {
+  signup(signupInput: SignUpInput!): AuthResponse!
+  login(loginInput: LoginInput!): AuthResponse!
+  refresh(refreshTokenInput: RefreshTokenInput!): AuthResponse!
+  logout: Boolean!
+}
+
+input SignUpInput {
+  email: String!
+  password: String!
+  fullName: String!
+}
+
+input LoginInput {
+  email: String!
+  password: String!
+}
+
+input RefreshTokenInput {
+  refreshToken: String!
 }

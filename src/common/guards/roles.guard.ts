@@ -1,8 +1,8 @@
-import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
-import { GqlExecutionContext } from '@nestjs/graphql';
+import { CanActivate, ExecutionContext, ForbiddenException, Injectable } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
-import { UserRole } from '../enums/user-role.enum';
+import { GqlExecutionContext } from '@nestjs/graphql';
 import { ROLES_KEY } from '../decorators/roles.decorator';
+import { UserRole } from '../enums/user-role.enum';
 
 @Injectable()
 export class RolesGuard implements CanActivate {
@@ -19,9 +19,14 @@ export class RolesGuard implements CanActivate {
     }
 
     const ctx = GqlExecutionContext.create(context);
-    const request = ctx.getContext<{ req: { user?: { roles?: UserRole[] } } }>().req;
+    const request = ctx.getContext<{ req: { user?: { roles?: UserRole[]; email?: string } } }>().req;
     const userRoles = request.user?.roles ?? [];
+    const isAllowed = requiredRoles.some((role) => userRoles.includes(role));
 
-    return requiredRoles.some((role) => userRoles.includes(role));
+    if (!isAllowed) {
+      throw new ForbiddenException('You do not have permission to perform this GraphQL operation');
+    }
+
+    return true;
   }
 }
