@@ -21,6 +21,7 @@ import { VaultsModule } from './vaults/vaults.module';
       autoSchemaFile: true,
       sortSchema: true,
       introspection: true,
+      graphiql: true,
       context: ({ req }: { req: Request }) => ({ req }),
     }),
     MongooseModule.forRoot(process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/compu3_graphql'),
