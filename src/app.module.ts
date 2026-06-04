@@ -3,7 +3,6 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { GraphQLModule } from '@nestjs/graphql';
 import { MongooseModule } from '@nestjs/mongoose';
-import { ApolloServerPluginLandingPageLocalDefault } from '@apollo/server/plugin/landingPage/default';
 import { Request } from 'express';
 import { AuthModule } from './auth/auth.module';
 import { HealthModule } from './health/health.module';
@@ -22,7 +21,6 @@ import { VaultsModule } from './vaults/vaults.module';
       autoSchemaFile: true,
       sortSchema: true,
       introspection: true,
-      plugins: [ApolloServerPluginLandingPageLocalDefault()],
       context: ({ req }: { req: Request }) => ({ req }),
     }),
     MongooseModule.forRoot(process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/compu3_graphql'),

@@ -2,19 +2,35 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-type User {
-  id: ID!
-  fullName: String!
-  email: String!
-  roles: [UserRole!]!
-  isActive: Boolean!
-  createdAt: DateTime!
-  updatedAt: DateTime!
+input CreateTransactionInput {
+  amountMinor: Int!
+  currency: Currency!
+  linkedTransactionId: ID
+  note: String
+  occurredAt: DateTime
+  type: MovementKind!
+  vaultId: ID!
 }
 
-enum UserRole {
-  SUPERADMIN
-  USER
+input CreateUserInput {
+  email: String!
+  fullName: String!
+  isActive: Boolean
+  password: String!
+  roles: [UserRole!]
+}
+
+input CreateVaultInput {
+  baseCurrency: Currency
+  description: String
+  name: String!
+  type: VaultType
+}
+
+enum Currency {
+  GALLEON
+  KNUT
+  SICKLE
 }
 
 """
@@ -23,36 +39,20 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 scalar DateTime
 
 type AuthResponse {
-  user: User!
+  accessToken: String!
 
   """
   Alias compatible con las pruebas de clase; contiene el access token JWT.
   """
   token: String!
-  accessToken: String!
   refreshToken: String!
+  user: User!
 }
 
-type Query {
-  me: User!
-  getAll: [User!]!
-  user(id: ID!): User!
-}
-
-type Mutation {
-  signup(signupInput: SignUpInput!): AuthResponse!
-  login(loginInput: LoginInput!): AuthResponse!
-  refresh(refreshTokenInput: RefreshTokenInput!): AuthResponse!
-  logout: Boolean!
-  createUser(createUserInput: CreateUserInput!): User!
-  updateUser(updateUserInput: UpdateUserInput!): User!
-  deleteUser(id: ID!): User!
-}
-
-input SignUpInput {
-  email: String!
-  password: String!
-  fullName: String!
+type HealthStatus {
+  message: String!
+  status: String!
+  timestamp: DateTime!
 }
 
 input LoginInput {
@@ -60,23 +60,121 @@ input LoginInput {
   password: String!
 }
 
+enum MovementKind {
+  EXPENSE
+  INCOME
+  TRANSFER
+}
+
+type Mutation {
+  createTransaction(createTransactionInput: CreateTransactionInput!): Transaction!
+  createUser(createUserInput: CreateUserInput!): User!
+  createVault(createVaultInput: CreateVaultInput!): Vault!
+  deleteTransaction(id: ID!): Transaction!
+  deleteUser(id: ID!): User!
+  deleteVault(id: ID!): Vault!
+  login(loginInput: LoginInput!): AuthResponse!
+  logout: Boolean!
+  refresh(refreshTokenInput: RefreshTokenInput!): AuthResponse!
+  signup(signupInput: SignUpInput!): AuthResponse!
+  updateTransaction(updateTransactionInput: UpdateTransactionInput!): Transaction!
+  updateUser(updateUserInput: UpdateUserInput!): User!
+  updateVault(updateVaultInput: UpdateVaultInput!): Vault!
+}
+
+type Query {
+  getAll: [User!]!
+  health: HealthStatus!
+  me: User!
+  transaction(id: ID!): Transaction!
+  transactions(vaultId: ID!): [Transaction!]!
+  user(id: ID!): User!
+  vault(id: ID!): Vault!
+  vaults: [Vault!]!
+}
+
 input RefreshTokenInput {
   refreshToken: String!
 }
 
-input CreateUserInput {
-  fullName: String!
+input SignUpInput {
   email: String!
+  fullName: String!
   password: String!
-  roles: [UserRole!]
-  isActive: Boolean
+}
+
+type Transaction {
+  amountMinor: Int!
+  createdAt: DateTime!
+  createdByUserId: ID!
+  currency: Currency!
+  deletedAt: DateTime
+  id: ID!
+  linkedTransactionId: ID
+  note: String
+  occurredAt: DateTime!
+  type: MovementKind!
+  updatedAt: DateTime!
+  vaultId: ID!
+}
+
+input UpdateTransactionInput {
+  amountMinor: Int
+  currency: Currency
+  id: ID!
+  linkedTransactionId: ID
+  note: String
+  occurredAt: DateTime
+  type: MovementKind
+  vaultId: ID
 }
 
 input UpdateUserInput {
-  fullName: String
   email: String
+  fullName: String
+  id: ID!
+  isActive: Boolean
   password: String
   roles: [UserRole!]
-  isActive: Boolean
+}
+
+input UpdateVaultInput {
+  baseCurrency: Currency
+  description: String
   id: ID!
+  name: String
+  type: VaultType
+}
+
+type User {
+  createdAt: DateTime!
+  email: String!
+  fullName: String!
+  id: ID!
+  isActive: Boolean!
+  roles: [UserRole!]!
+  updatedAt: DateTime!
+}
+
+enum UserRole {
+  SUPERADMIN
+  USER
+}
+
+type Vault {
+  baseCurrency: Currency!
+  createdAt: DateTime!
+  deletedAt: DateTime
+  description: String
+  id: ID!
+  name: String!
+  ownerUserId: ID!
+  type: VaultType!
+  updatedAt: DateTime!
+}
+
+enum VaultType {
+  HOUSEHOLD
+  PERSONAL
+  SHARED
 }
